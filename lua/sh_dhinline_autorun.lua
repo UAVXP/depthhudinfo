@@ -8,7 +8,8 @@
 ////////////////////////////////////////////////
 
 if DHINLINE_DEBUG == nil then
-	DHINLINE_DEBUG = false
+--	DHINLINE_DEBUG = false
+	DHINLINE_DEBUG = true
 end
 
 if DHINLINE_BENCHMARK == nil then
@@ -47,7 +48,8 @@ DHINLINE_THEMEDIR = "dhinline_themes/"
 
 // If you are including as part of a gamemode, set DHINLINE_SPECIAL_ISGAMEMODE_STRAP to true.
 
-DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = false
+--DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = false
+DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = true
 DHINLINE_SPECIAL_ISGAMEMODE_STRAP = false
 
 if (CLIENT) then
