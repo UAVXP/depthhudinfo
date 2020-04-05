@@ -35,7 +35,7 @@ end
 
 // DEBUG : TO BE TESTED
 function dhinline.DeriveFromTheme( sTheme )
-	local path = DHINLINE_THEMEDIR 
+	local path = DHINLINE_THEMEDIR
 	include(path..sTheme.."_theme.lua")
 	THEME._derivefrom = sTheme
 end
@@ -47,20 +47,20 @@ function dhinline.LoadAllThemes()
 	if DHINLINE_SPECIAL_ISGAMEMODE_STRAP then
 		path = string.Replace(GM.Folder, "gamemodes/", "") .. "/gamemode/" .. path
 	end
-	for _,file in pairs(file.FindInLua(path.."*_theme.lua")) do
+	for _,file in pairs(file.Find(path.."*_theme.lua", "LUA")) do
 		THEME = {}
-		
+
 		include(path..file)
-		
+
 		local sKeyword = string.Replace(file, "_theme.lua", "")
 		dhinline_theme.Register(sKeyword, THEME)
-		
+
 		THEME = nil
 	end
-	
+
 	local stNames = dhinline_theme.GetNamesTable()
 	//table.sort(stNames, function(a,b) return dhinline_element.GetThemeObject(a):GetDisplayName() < dhinline_element.GetThemeObject(b):GetDisplayName() end)
-	
+
 	if DHINLINE_DEBUG then
 		print(DHINLINE_NAME .. " >> Registered Themes : ")
 		for k,name in pairs( stNames ) do
@@ -68,13 +68,13 @@ function dhinline.LoadAllThemes()
 		end
 		Msg("\n")
 	end
-	
+
 	dhinline.LoadCurrentTheme()
 end
 
 function dhinline.SetTheme( sName )
 	if not sName or not table.HasValue( dhinline_theme.GetNamesTable() , sName ) then return end
-	
+
 	dhinline.SetVar("dhinline_core_theme", sName )
 	dhinline_theme.SetTheme( sName )
 end
@@ -87,13 +87,13 @@ function dhinline.LoadElement( sThemeName, sElementName, opt_ThemeOverride )
 	ELEMENT = {}
 	local pathBase = DHINLINE_THEMEDIR .. (opt_ThemeOverride or sThemeName) .."_element.lua"
 	local pathElem = DHINLINE_THEMEDIR .. (opt_ThemeOverride or sThemeName) .."/"..sElementName..".lua"
-	
+
 	ELEMENT._mytheme = sThemeName
 	ELEMENT.Theme = dhinline_theme.GetThemeObject(ELEMENT._mytheme)
-	
+
 	include( pathBase )
 	include( pathElem )
-	
+
 	return ELEMENT
 end
 
@@ -104,13 +104,13 @@ end
 
 function dhinline.CalcCenter( xRel , yRel , width, height )
 	local xCalc,yCalc = 0,0
-	
+
 	xDist = dhinline_dat.ui_edgeSpacingRel*ScrW() + width*0.5
 	xCalc = xRel*ScrW() + (xRel*(-2) + 1)*xDist
-	
+
 	yDist = dhinline_dat.ui_edgeSpacingRel*ScrW() + height*0.5 //ScrW here is not a mistake
 	yCalc = yRel*ScrH() + (yRel*(-2) + 1)*yDist
-	
+
 	return xCalc, yCalc
 end
 
@@ -121,7 +121,7 @@ end
 function dhinline.GetRelPosFromGrid( xGrid, yGrid )
 	local max = dhinline.GetGridDivideMax()
 	local xRel, yRel = (xGrid / max), (yGrid / max)
-	
+
 	return xRel, yRel
 end
 
@@ -165,7 +165,7 @@ function dhinline.DrawSprite(sprite, x, y, width, height, angle, r, g, b, a)
 	else
 		spriteid = sprite
 	end
-	
+
 	surface.SetTexture(spriteid)
 	surface.SetDrawColor(r, g, b, a)
 	surface.DrawTexturedRectRotated(x, y, width, height, angle)
@@ -250,22 +250,22 @@ end
 function dhinline.RegisterPanelConstructor( sType, fConstructor, stConvarSuffixes )
 	sType = string.lower(sType)
 	if dhinline.ParamTypeExists( sType ) then return end
-	
+
 	dhinline_dat.PANEL_Constructors[sType] = fConstructor
 	dhinline_dat.PANEL_ConvarSuffixes[sType] = stConvarSuffixes or nil
 	table.insert( dhinline_dat.PANEL_Types, sType)
-	
+
 	if DHINLINE_DEBUG then print(DHINLINE_NAME .. " > Registered Panel Constructor : "..sType) end
 end
 
 function dhinline.BuildParamConvars( sType, sFullConvarName, sDefault )
 	sType = string.lower(sType)
 	if not dhinline.ParamTypeExists( sType ) then return end
-	
+
 	if dhinline_dat.PANEL_ConvarSuffixes[sType] == nil then
 		dhinline.CreateVar(sFullConvarName, tostring(sDefault), true, false)
 		if DHINLINE_DEBUG then print(DHINLINE_NAME .. " > Added Var : "..sFullConvarName.." = "..tostring(sDefault)) end
-		
+
 	elseif type(dhinline_dat.PANEL_ConvarSuffixes[sType]) == "table" then
 		for k,suffix in pairs( dhinline_dat.PANEL_ConvarSuffixes[sType] ) do
 			dhinline.CreateVar(sFullConvarName .. "_" .. suffix, tostring(sDefault[k] or sDefault[1] or sDefault), true, false)
@@ -277,19 +277,19 @@ end
 function dhinline.GetParamSuffixes( sType )
 	sType = string.lower(sType)
 	if not dhinline.ParamTypeExists( sType ) then return end
-	
+
 	return dhinline_dat.PANEL_ConvarSuffixes[sType]
 end
 
 function dhinline.GetParamConvars( sType, sFullConvarName )
 	sType = string.lower(sType)
 	if not dhinline.ParamTypeExists( sType ) then return end
-	
+
 	local myConvars = {}
-	
+
 	if dhinline_dat.PANEL_ConvarSuffixes[sType] == nil then
 		table.insert(myConvars, sFullConvarName)
-		
+
 	elseif type(dhinline_dat.PANEL_ConvarSuffixes[sType]) == "table" then
 		for k,suffix in pairs( dhinline_dat.PANEL_ConvarSuffixes[sType] ) do
 			table.insert(myConvars, sFullConvarName .. "_" .. suffix)
@@ -300,12 +300,12 @@ end
 
 function dhinline.BuildParamPanel( sFullConvarName, stData )
 	if not dhinline.ParamTypeExists( stData.Type ) then return end
-	
+
 	return dhinline_dat.PANEL_Constructors[stData.Type](sFullConvarName , stData)
 end
 
 function dhinline.InitializeGenericConstructors()
-	dhinline.RegisterPanelConstructor( "label" , function( sFullConvarName, stData )	
+	dhinline.RegisterPanelConstructor( "label" , function( sFullConvarName, stData )
 		local myPanel = vgui.Create("DLabel")
 		myPanel:SetText( stData.Text or "<Error : no text !>" )
 		return myPanel
@@ -314,24 +314,24 @@ function dhinline.InitializeGenericConstructors()
 		local myPanel = vgui.Create( "DCheckBoxLabel" )
 		myPanel:SetText( stData.Text or "<Error : no text !>" )
 		myPanel:SetConVar( sFullConvarName )
-		return myPanel 
+		return myPanel
 	end )
-	dhinline.RegisterPanelConstructor( "slider" , function( sFullConvarName, stData )	
+	dhinline.RegisterPanelConstructor( "slider" , function( sFullConvarName, stData )
 		local myPanel = vgui.Create( "DNumSlider" )
 		myPanel:SetText( stData.Text or "<Error : no text !>" )
 		myPanel:SetMin( tonumber(stData.Min or 0) )
 		myPanel:SetMax( tonumber(stData.Max or ((stData.Min or 0) + 1)) )
 		myPanel:SetDecimals( tonumber(stData.Decimals or 0) )
 		myPanel:SetConVar( sFullConvarName )
-		return myPanel 
+		return myPanel
 	end )
-	dhinline.RegisterPanelConstructor( "color" , function( sFullConvarName, stData )	
+	dhinline.RegisterPanelConstructor( "color" , function( sFullConvarName, stData )
 		local myPanel = vgui.Create("CtrlColor")
 		myPanel:SetConVarR(sFullConvarName.."_r")
 		myPanel:SetConVarG(sFullConvarName.."_g")
 		myPanel:SetConVarB(sFullConvarName.."_b")
 		myPanel:SetConVarA(sFullConvarName.."_a")
-		return myPanel 
+		return myPanel
 	end , {"r","g","b","a"})
 end
 
@@ -356,21 +356,21 @@ end
 function dhinline.HUDPaint(name)
 	if dhinline.GetVar("dhinline_core_enable") <= 0 then return end
 	dhinline_dat.ui_edgeSpacingRel = dhinline.GetVar("dhinline_core_ui_spacing") * 0.015
-	
+
 	--dhinline.RecalcAllSmoothers()
-	
+
 	local myThemeObjectRef = dhinline_theme.GetCurrentThemeObject()
-	
+
 	dhinline.RemoteCoreThink( myThemeObjectRef )
-	
+
 	local bOkay, strErr = pcall(function() dhinline.RemoteThink(myThemeObjectRef) end)
 	if not bOkay then print(" > " .. DHINLINE_NAME .. " Think ERROR : ".. strErr) end
-	
+
 	if bOkay then
 		local bOkayTwo, strErrTwo = pcall(function() dhinline.RemotePaint(myThemeObjectRef) end)
 		if not bOkayTwo then print(" > " .. DHINLINE_NAME .. " Paint ERROR : ".. strErrTwo) end
 	end
-	
+
 	if bOkay then
 		local bOkayTwo, strErrTwo = pcall(function() dhinline.RemotePaintMisc(myThemeObjectRef) end)
 		if not bOkayTwo then print(" > " .. DHINLINE_NAME .. " PaintMisc ERROR : ".. strErrTwo) end
@@ -382,7 +382,7 @@ function dhinline.HUDShouldDraw( name )
 	(dhinline.GetVar("dhinline_core_enable") <= 0)
 	or (dhinline.GetVar("dhinline_core_disabledefault") <= 0)
 	) then return end
-	
+
 	if name == "CHudHealth"        then return false end
 	if name == "CHudBattery"       then return false end
 	if name == "CHudAmmo"          then return false end
@@ -416,21 +416,21 @@ end
 function dhinline.Mount()
 	print("")
 	print("[ Mounting " .. DHINLINE_NAME .. " ... ]")
-	
+
 	dhinline.CreateVar("dhinline_core_enable", "1", true, false)
 	dhinline.CreateVar("dhinline_core_disabledefault", "1", true, false)
 	dhinline.CreateVar("dhinline_core_theme", DHINLINE_DEFAULTTHEME, true, false)
 	dhinline.CreateVar("dhinline_core_ui_spacing", "1", true, false)
-	
+
 	if dhinline.MountMenu then
 		dhinline.MountMenu()
-		
+
 		concommand.Add("dhinline_call_reloadtheme", dhinline.LoadCurrentTheme)
 		concommand.Add("dhinline_call_reloadthemelist", dhinline.LoadAllThemes)
 		concommand.Add("dhinline_call_settheme", dhinline.SetThemeCommand, dhinline.ThemeAutoComplete)
 		concommand.Add("dhinline_call_reverttheme", dhinline.RevertTheme )
 	end
-	
+
 	dhinline.InitializeGenericConstructors()
 	dhinline.LoadAllThemes( true )
 
@@ -440,42 +440,42 @@ function dhinline.Mount()
 	if DHINLINE_HOOK_HUDPAINT then
 		hook.Add( "HUDPaint", "dhinlineHUDPaint", dhinline.HUDPaint)
 	end
-	
+
 	print("[ " .. DHINLINE_NAME .. " is now mounted. ]")
 	print("")
-	
+
 end
 
 function dhinline.Unmount()
 	print("")
 	print("] Unmounting " .. DHINLINE_NAME .. " ... [")
 	dhinline_theme.RemoveAll()
-	
+
 	if dhinline.UnmountMenu then
 		dhinline.UnmountMenu()
-		
+
 		concommand.Remove("dhinline_call_reloadtheme")
 		concommand.Remove("dhinline_call_reloadthemelist")
 		concommand.Remove("dhinline_call_settheme")
 		concommand.Remove("dhinline_call_reverttheme")
 	end
-	
+
 	table.Empty(dhinline_dat)
 	table.Empty(dhinline)
-	
+
 	dhinline_dat = nil
 	dhinline = nil
-	
+
 	if DHINLINE_HOOK_HUDSHOULDDRAW then
 		hook.Remove( "HUDShouldDraw", "dhinlineHUDShouldDraw" )
 	end
 	if DHINLINE_HOOK_HUDPAINT then
 		hook.Remove( "HUDPaint", "dhinlineHUDPaint" )
 	end
-	
+
 	print("] " .. DHINLINE_NAME .. " has been unmounted. [")
 	print("")
-	
+
 end
 
 /////////////////////////////////////////////////////////////////////////

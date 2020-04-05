@@ -56,20 +56,20 @@ if (CLIENT) then
 	dhinline = {}
 
 	include("cl_dhinline_base.lua")
-	
+
 	if not DHINLINE_SPECIAL_SENDSTATICTOCLIENTS then
 		// Load regular DepthHUD Inline for clients.
 		include("cl_dhinline_version.lua")
 		include("cl_dhinline_elementpanel.lua")
 		include("cl_dhinline_cvar_custom.lua")
-		
+
 	else
 		// Load special serverside DepthHUD Inline.
 		include("cl_dhinline_cvar_static.lua")
 	end
 
 	dhinline.Mount()
-	
+
 elseif (DHINLINE_SPECIAL_SENDSTATICTOCLIENTS) then // SERVER, don't send to clients default.
 
 	AddCSLuaFile("autorun/client/cl_dhinline_autorun.lua")
@@ -79,20 +79,20 @@ elseif (DHINLINE_SPECIAL_SENDSTATICTOCLIENTS) then // SERVER, don't send to clie
 	AddCSLuaFile("cl_dhinline_element.lua")
 	AddCSLuaFile("cl_dhinline_theme.lua")
 	AddCSLuaFile("cl_dhinline_cvar_static.lua")
-	
+
 	local mainPath = DHINLINE_THEMEDIR
 	if DHINLINE_SPECIAL_ISGAMEMODE_STRAP then
 		mainPath = string.Replace(GM.Folder, "gamemodes/", "") .. "/gamemode/" .. mainPath
 	end
-	for _,fileName in pairs(file.FindInLua(mainPath .. "*_theme.lua")) do
+	for _,fileName in pairs(file.Find(mainPath .. "*_theme.lua", "LUA")) do
 		AddCSLuaFile(mainPath .. fileName)
 		AddCSLuaFile(mainPath .. string.Replace(fileName, "_theme.lua", "_element.lua"))
 		Msg("Server " .. DHINLINE_NAME .. " > Sending theme " .. string.Replace(fileName, "_theme.lua", "") .. "\n")
 		local themePath = mainPath .. string.Replace(fileName, "_theme.lua", "/")
-		for _,elementFile in pairs(file.FindInLua(themePath .."/*.lua")) do
+		for _,elementFile in pairs(file.Find(themePath .."/*.lua", "LUA")) do
 			AddCSLuaFile(themePath .. elementFile)
 			if (DHINLINE_DEBUG) then Msg("Server " .. DHINLINE_NAME .. " > Sending " .. themePath .. elementFile .. "\n") end
 		end
 	end
-	
+
 end
