@@ -16,24 +16,24 @@ function ELEMENT:Initialize()
 end
 
 function ELEMENT:DrawFunction()
-	if SinglePlayer() then return end
+	if game.SinglePlayer() then return end
 	if (team.GetAllTeams == nil) then return end
-	
+
 	self:FadeIn()
 	//if (table.Count(team.GetAllTeams()) == 3) then return end
-	
+
 	//Team Name and Color
 	if (LocalPlayer():Team() ~= self.MyTeamID) or (LocalPlayer().dhradar_communitycolor and (self.MyTeamColor ~= LocalPlayer().dhradar_communitycolor)) then
 		self.MyTeamID = LocalPlayer():Team()
 		self.MyTeamColor = LocalPlayer().dhradar_communitycolor or team.GetColor(self.MyTeamID)
-		
+
 		self.StoredSub = team.GetName(self.MyTeamID)
 		self.StoredSub = (self.StoredSub == "Unassigned") and "Community" or self.StoredSub
-		
+
 		self:ChangeSmootherTarget("color", self.MyTeamColor)
 	end
-	
-	
+
+
 	//Number of players
 	self.StoredName = team.NumPlayers(self.MyTeamID) .. " player"
 	if (team.NumPlayers(self.MyTeamID) > 1) then
@@ -42,19 +42,19 @@ function ELEMENT:DrawFunction()
 
 	surface.SetFont( self.Theme:GetAppropriateFont(self.StoredName, 1) )
 	local wB, hB = surface.GetTextSize( self.StoredName )
-	
+
 	surface.SetFont( self.Theme:GetAppropriateFont(self.StoredSub, 0) )
 	local wS, hS = surface.GetTextSize( self.StoredSub )
-	
+
 	local w = math.Max(wB,wS)
-	
+
 	self:ChangeSmootherTarget("width", 38 + w)
-	
-	
-	
+
+
+
 	self.SizeX = self:GetSmootherCurrent("width")
 	local color = self:GetSmootherCurrent("color")
-	
+
 	self:DrawGenericInfobox(
 /*Text   */ self.StoredName
 /*Subtxt */ ,self.StoredSub
@@ -73,4 +73,3 @@ function ELEMENT:DrawFunction()
 	)
 	return false
 end
-

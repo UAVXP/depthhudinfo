@@ -48,8 +48,8 @@ DHINLINE_THEMEDIR = "dhinline_themes/"
 
 // If you are including as part of a gamemode, set DHINLINE_SPECIAL_ISGAMEMODE_STRAP to true.
 
---DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = false
-DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = true
+DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = false
+--DHINLINE_SPECIAL_SENDSTATICTOCLIENTS = true
 DHINLINE_SPECIAL_ISGAMEMODE_STRAP = false
 
 if (CLIENT) then
@@ -72,7 +72,8 @@ if (CLIENT) then
 
 	dhinline.Mount()
 
-elseif (DHINLINE_SPECIAL_SENDSTATICTOCLIENTS) then // SERVER, don't send to clients default.
+--elseif (DHINLINE_SPECIAL_SENDSTATICTOCLIENTS) then // SERVER, don't send to clients default.
+else // SERVER
 
 	AddCSLuaFile("autorun/client/cl_dhinline_autorun.lua")
 	AddCSLuaFile("sh_dhinline_autorun.lua")

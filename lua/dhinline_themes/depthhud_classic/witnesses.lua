@@ -38,7 +38,7 @@ end
 
 function ELEMENT:UseMyOwnFindPlayers()
 	if (CurTime() < (self.TIME_LastPlayerFind + self.TIME_DELAY_PLY)) then return end
-	
+
 	self.FINDER_Players = {}
 	self.FINDER_Players = player.GetAll()
 	for k,ply in pairs(self.FINDER_Players) do
@@ -59,7 +59,7 @@ function ELEMENT:GetBestPlayerTable()
 end
 
 function ELEMENT:DrawFunction()
-	if SinglePlayer() then return end
+	if game.SinglePlayer() then return end
 	self:FadeIn()
 
 	local area_smooth = nil
@@ -68,12 +68,12 @@ function ELEMENT:DrawFunction()
 	local text = ""
 	local smallText = ""
 	local rate = 0
-	
-	local myBestPlayerTable = self:GetBestPlayerTable()		
+
+	local myBestPlayerTable = self:GetBestPlayerTable()
 	if (CurTime() > ( self.lastWitnessCheck + self.witnessCheckDelay )) then
 		self.looking = 0
 		self.counter = 0
-		
+
 		self.myRealPos = LocalPlayer():EyePos()
 		for k,ply in pairs(myBestPlayerTable) do
 			if ply:IsValid() and (ply ~= LocalPlayer()) then
@@ -92,22 +92,22 @@ function ELEMENT:DrawFunction()
 		end
 		self:ChangeSmootherTarget("area", self.counter)
 		self:ChangeSmootherTarget("looking", self.looking)
-		
+
 		self.lastWitnessCheck = CurTime()
 	end
-	
+
 	looking_smooth   = math.Round(self:GetSmootherCurrent("looking"))
 	area_smooth = math.Round(self:GetSmootherCurrent("area"))
-	
+
 	rate = (1 - math.Clamp(looking_smooth / math.Clamp(area_smooth,1,128),0,1))^2
 	self:ChangeSmootherTarget("rate", rate)
-	
+
 	text = looking_smooth .. " / " .. area_smooth
 	smallText = "WITNESSES"
-	
+
 	rate_smooth = self:GetSmootherCurrent("rate")
-	
-	
+
+
 	self:DrawGenericInfobox(
 /*Text   */ text
 /*Subtxt */ ,smallText
@@ -124,6 +124,6 @@ function ELEMENT:DrawFunction()
 /*stCol  */ ,nil
 /*stColSm*/ ,nil
 	)
-	
+
 	return true
 end

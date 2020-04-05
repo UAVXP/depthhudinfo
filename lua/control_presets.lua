@@ -1,9 +1,9 @@
 //
 //  ___  ___   _   _   _    __   _   ___ ___ __ __
 // |_ _|| __| / \ | \_/ |  / _| / \ | o \ o \\ V /
-//  | | | _| | o || \_/ | ( |_n| o ||   /   / \ / 
+//  | | | _| | o || \_/ | ( |_n| o ||   /   / \ /
 //  |_| |___||_n_||_| |_|  \__/|_n_||_|\\_|\\ |_|  2007
-//										 
+//
 //
 
 include( 'preset_editor.lua' )
@@ -15,19 +15,19 @@ local PANEL = {}
 ---------------------------------------------------------*/
 function PANEL:Init()
 
-	self.DropDown = vgui.Create( "DMultiChoice", self )
+	self.DropDown = vgui.Create( "DComboBox", self )
 	self.DropDown.OnSelect = function( dropdown, index, value, data ) self:OnSelect( index, value, data ) end
 	self.DropDown:SetText( "Presets" )
 	self.DropDown:SetEditable( false )
-	
+
 	self.Button = vgui.Create( "DSysButton", self )
 	self.Button:SetType( "right" )
 	self.Button.DoClick = function() self:OpenPresetEditor() end
-	
+
 	self:SetTall( 20 )
-	
+
 	self.ConVars = {}
-	
+
 end
 
 
@@ -58,7 +58,7 @@ function PANEL:PerformLayout()
 
 	self.Button:SetSize( self:GetTall(), self:GetTall() )
 	self.Button:SetPos( self:GetWide() - self.Button:GetWide(), 0 )
-	
+
 	self.DropDown:SetPos( 0, 0 )
 	self.DropDown:SetWide( self:GetWide() - self.Button:GetWide() - 5 )
 
@@ -71,7 +71,7 @@ end
 function PANEL:OnSelect( index, value, data )
 
 	if ( !data ) then return end
-	
+
 	for k, v in pairs( data ) do
 		RunConsoleCommand( k, v )
 	end
@@ -134,7 +134,7 @@ function PANEL:ReloadPresets()
 	self:Clear()
 
 	local t = presets.GetTable( self.m_strPreset )
-	
+
 	for k, v in pairs( t ) do
 		self:AddOption( k, v )
 	end

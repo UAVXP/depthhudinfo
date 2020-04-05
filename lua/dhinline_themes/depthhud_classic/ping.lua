@@ -26,32 +26,32 @@ ELEMENT.colorVolatile  = Color(255,192,128,192)
 function ELEMENT:Initialize()
 	self:CreateSmoother("ping", 10, 0.1)
 	self:CreateSmoother("color", self.GoodColor, 0.1)
-	
+
 	self:CreateSmoother("unsyncpercent", 0, 0.05)
 end
 
 function ELEMENT:DrawFunction()
-	if not SinglePlayer() then
+	if not game.SinglePlayer() then
 		self:FadeIn()
-		
+
 		local ping_smooth = math.floor(self:GetSmootherCurrent("ping"))
 		local smallText = "MS"
 		self:ChangeSmootherTarget("ping", LocalPlayer():Ping())
-		
+
 		local estimaCheck = math.abs( RealTime() - self.PingCur - CurTime() )
-		
+
 		self:ChangeSmootherTarget("unsyncpercent", estimaCheck / self.PingAlert)
 		local currentunsync = self:GetSmootherCurrent("unsyncpercent")
-		
+
 		//Zero is too perfect
 		if (estimaCheck > self.PingAlert) or (estimaCheck == 0) then
 			self.PingCur = RealTime() - CurTime()
-			
+
 			self:ChangeSmootherCurrent("color",  self.BadColor)
-			
+
 			local accum = self.Theme:GetVolatileStorage("ping_loss") or 0
 			accum = accum + 1
-			
+
 			local text = ""
 			/*if (accum < 100) then
 				text = accum .. " UNSYNC"
@@ -62,7 +62,7 @@ function ELEMENT:DrawFunction()
 			if (estimaCheck == 0) then
 				text = text .. ".."
 			end
-			
+
 			self:UpdateVolatile(
 /*Vola   */ "ping_loss"
 /*xRelOff*/ ,self.xRelPosEvo
@@ -75,13 +75,13 @@ function ELEMENT:DrawFunction()
 /*FadePow*/ ,self.EvoPower
 /*Storage*/ ,accum
 			)
-			
+
 		else
 			self.PingCur = self.PingCur + (RealTime() - self.PingCur - CurTime()) * 0.05 * FrameTime()
-			
+
 		end
 		self.SmootherColor = self:GetSmootherCurrent("color")
-		
+
 		self:DrawGenericInfobox(
 	/*Text   */ ping_smooth
 	/*Subtxt */ ,smallText
@@ -99,6 +99,6 @@ function ELEMENT:DrawFunction()
 	/*stColSm*/ ,nil
 		)
 	end
-	
+
 	return true
 end
