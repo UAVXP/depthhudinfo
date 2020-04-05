@@ -1,0 +1,2 @@
+2.05
+Changed the way DepthHUD Inline works. Added BETATESTING "DepthHUD Iterative" Theme as an attempt to enhance framerate : This theme will replace Classic. - http://www.facepunch.com/showthread.php?p=16504028

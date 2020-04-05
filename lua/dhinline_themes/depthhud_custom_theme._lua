@@ -1,0 +1,3 @@
+dhinline.DeriveFromTheme( "depthhud_classic" )
+
+THEME.Name = "DepthHUD Custom"
